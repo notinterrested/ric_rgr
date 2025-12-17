@@ -4,10 +4,22 @@ from datetime import datetime, timezone
 
 import httpx
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from azure.cosmos import CosmosClient, exceptions
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
+
 
 app = FastAPI()
+
+BASE_DIR = Path(__file__).resolve().parent
+
+app.mount(
+    "/static",
+    StaticFiles(directory=BASE_DIR / "static"),
+    name="static",
+)
+
 
 # ===== Cosmos DB =====
 COSMOS_ENDPOINT = os.getenv("COSMOS_ENDPOINT")
@@ -32,50 +44,7 @@ SNOW_CODES = {71, 73, 75, 77, 85, 86}
 @app.get("/", response_class=HTMLResponse)
 def index():
     # супер-проста сторінка: кнопка + місце для тексту
-    return """
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8"/>
-    <title>Bukovel Snow Checker</title>
-  </head>
-  <body style="font-family: Arial, sans-serif; padding: 24px;">
-    <h2>Bukovel: чи падає сніг?</h2>
-
-    <button id="btn">Оновити</button>
-    <p id="status" style="margin-top: 16px; font-size: 18px;">Натисни "Оновити"</p>
-    <pre id="details" style="background:#f4f4f4; padding:12px;"></pre>
-
-    <script>
-      const btn = document.getElementById("btn");
-      const statusEl = document.getElementById("status");
-      const detailsEl = document.getElementById("details");
-
-      btn.addEventListener("click", async () => {
-        statusEl.textContent = "Оновлюю...";
-        detailsEl.textContent = "";
-
-        try {
-          const res = await fetch("/refresh", { method: "POST" });
-          const data = await res.json();
-
-          if (!res.ok) {
-            statusEl.textContent = "Помилка";
-            detailsEl.textContent = JSON.stringify(data, null, 2);
-            return;
-          }
-
-          statusEl.textContent = data.is_snowing ? "падає сніг" : "снігу немає";
-          detailsEl.textContent = JSON.stringify(data, null, 2);
-        } catch (e) {
-          statusEl.textContent = "Помилка запиту";
-          detailsEl.textContent = String(e);
-        }
-      });
-    </script>
-  </body>
-</html>
-"""
+    return FileResponse(BASE_DIR / "static" / "index.html")
 
 
 @app.post("/refresh")
