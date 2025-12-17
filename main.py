@@ -101,3 +101,53 @@ def refresh_weather():
         "weathercode": weathercode,
         "time": time_str,
     }
+
+
+@app.get("/forecast")
+def forecast_14d():
+    # Open-Meteo daily forecast for 14 days
+    url = (
+        "https://api.open-meteo.com/v1/forecast"
+        f"?latitude={BUKOVEL_LAT}&longitude={BUKOVEL_LON}"
+        f"&daily=weathercode"
+        f"&forecast_days=14"
+        f"&timezone={BUKOVEL_TZ}"
+    )
+
+    try:
+        r = httpx.get(url, timeout=15.0)
+        r.raise_for_status()
+        payload = r.json()
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Forecast API error: {e}")
+
+    daily = payload.get("daily") or {}
+    dates = daily.get("time") or []
+    codes = daily.get("weathercode") or []
+
+    first_snow_date = None
+    for d, c in zip(dates, codes):
+        if c in SNOW_CODES:
+            first_snow_date = d
+            break
+
+    # (опційно) запис в Cosmos DB
+    doc_id = str(uuid.uuid4())
+    now_iso = datetime.now(timezone.utc).isoformat()
+    doc = {
+        "id": doc_id,
+        "pk": "bukovel",
+        "type": "forecast_14d",
+        "created_at_utc": now_iso,
+        "result": {
+            "first_snow_date": first_snow_date,
+        },
+        "raw": payload,
+    }
+    try:
+        container.create_item(body=doc)
+    except Exception:
+        # не валимо запит через логування
+        pass
+
+    return {"first_snow_date": first_snow_date}

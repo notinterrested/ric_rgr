@@ -5,106 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>чи пора на лижі?</title>
 
-  <style>
-    * { box-sizing: border-box; }
-
-    html, body { height: 100%; margin: 0; }
-
-    body {
-      font-family: Arial, sans-serif;
-      color: #fff;
-      overflow: hidden;
-      transition: background 0.6s ease;
-    }
-
-    body.sun  { background: linear-gradient(180deg, #ffd39a, #d9822b); }
-    body.snow { background: linear-gradient(180deg, #dff3ff, #7fbce8); }
-
-    /* ===== DECOR (НЕ ЛОВИТЬ КЛІКИ) ===== */
-    .sun,
-    .snowflake {
-      pointer-events: none;
-    }
-
-    .sun {
-      position: fixed;
-      top: 40px;
-      right: 40px;
-      width: 140px;
-      height: 140px;
-      background: radial-gradient(circle, #fff8c6, #ffb703);
-      border-radius: 50%;
-      box-shadow: 0 0 80px rgba(255,200,80,0.8);
-      animation: pulse 3s ease-in-out infinite;
-      z-index: 1;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
-    /* ===== CARD (ГАРАНТОВАНО КЛІКАБЕЛЬНА) ===== */
-    .card {
-      position: fixed;
-      left: -400%;
-      top: 200%;
-      transform: translate(-50%, -50%);
-
-      width: min(520px, 90vw);
-      padding: 28px 24px 26px;
-      border-radius: 20px;
-      text-align: center;
-
-      background: rgba(0,0,0,0.28);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.35);
-      z-index: 10;
-
-      pointer-events: auto;
-    }
-
-    h1 { margin: 0 0 18px; font-size: 28px; font-weight: 700; }
-    .result { font-size: 22px; margin: 0 0 20px; }
-
-    button {
-      padding: 14px 26px;
-      border-radius: 14px;
-      border: none;
-      cursor: pointer;
-      font-size: 18px;
-      font-weight: 700;
-      background: #fff;
-      color: #000;
-    }
-
-    pre {
-      margin: 18px 0 0;
-      background: rgba(0,0,0,0.35);
-      padding: 14px;
-      border-radius: 12px;
-      max-height: 220px;
-      overflow: auto;
-      font-size: 12px;
-      text-align: left;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    /* ===== SNOW ANIMATION ===== */
-    .snowflake {
-      position: fixed;
-      top: -10px;
-      color: white;
-      user-select: none;
-      animation-name: fall;
-      animation-timing-function: linear;
-      z-index: 2;
-    }
-
-    @keyframes fall {
-      to { transform: translateY(110vh); }
-    }
-  </style>
+  <!-- CSS -->
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body class="sun">
@@ -112,74 +14,19 @@
 
   <div class="card">
     <h1>чи пора на лижі?</h1>
-    <div class="result" id="status">Натисни кнопку</div>
-    <button id="btn">Оновити</button>
-    <pre id="debug"></pre>
+
+    <div class="result" id="status">Натисни “Оновити”</div>
+    <div class="result hidden" id="forecastText"></div>
+
+    <div class="row">
+      <button id="btnRefresh">Оновити</button>
+      <button id="btnWhen" class="hidden">а коли буде?</button>
+    </div>
+
+    <pre id="debug" class="hidden"></pre>
   </div>
 
-  <script>
-    const btn = document.getElementById("btn");
-    const statusEl = document.getElementById("status");
-    const debugEl = document.getElementById("debug");
-    const sunEl = document.getElementById("sun");
-
-    function createSnow() {
-      for (let i = 0; i < 40; i++) {
-        const flake = document.createElement("div");
-        flake.className = "snowflake";
-        flake.textContent = "❄";
-        flake.style.left = Math.random() * 100 + "vw";
-        flake.style.fontSize = (Math.random() * 16 + 10) + "px";
-        flake.style.animationDuration = (Math.random() * 5 + 5) + "s";
-        flake.style.opacity = Math.random();
-        document.body.appendChild(flake);
-      }
-    }
-
-    function clearSnow() {
-      document.querySelectorAll(".snowflake").forEach(e => e.remove());
-    }
-
-    btn.addEventListener("click", async () => {
-      statusEl.textContent = "Оновлюю…";
-      debugEl.textContent = "";
-      btn.disabled = true;
-
-      try {
-        const response = await fetch("/refresh", { method: "POST" });
-        const text = await response.text();
-
-        debugEl.textContent = "HTTP " + response.status + "\n\n" + text;
-
-        if (!response.ok) {
-          statusEl.textContent = "Помилка";
-          return;
-        }
-
-        let data;
-        try { data = JSON.parse(text); }
-        catch { statusEl.textContent = "Помилка даних"; return; }
-
-        if (data.is_snowing) {
-          document.body.className = "snow";
-          sunEl.style.display = "none";
-          clearSnow();
-          createSnow();
-          statusEl.textContent = "Пора.";
-        } else {
-          document.body.className = "sun";
-          sunEl.style.display = "block";
-          clearSnow();
-          statusEl.textContent = "Ще рано";
-        }
-
-      } catch (e) {
-        statusEl.textContent = "Помилка запиту";
-        debugEl.textContent = String(e);
-      } finally {
-        btn.disabled = false;
-      }
-    });
-  </script>
+  <!-- JS -->
+  <script src="/static/app.js"></script>
 </body>
 </html>
