@@ -7,19 +7,15 @@ body {
   font-family: Arial, sans-serif;
   color: #ffffff;
   overflow: hidden;
-  margin: 0;
+
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
 }
 
 .center {
-  position: fixed;
-  inset: 0;                 /* top:0 right:0 bottom:0 left:0 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-
-  z-index: 10;              /* вище фону і снігу */
-  pointer-events: none;     /* щоб фон не “ловив” кліки */
+  position: relative;
+  z-index: 10;
 }
 
 /* ===== BACKGROUND LAYERS (плавний перехід) ===== */
@@ -71,7 +67,6 @@ body.snow #bgSnow { opacity: 1; }
 
 /* ===== CENTER CARD ===== */
 .card {
-  pointer-events: auto;     /* ✅ кнопки працюють */
   position: relative;
 
   width: min(520px, 90vw);

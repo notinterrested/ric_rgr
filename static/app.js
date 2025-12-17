@@ -28,14 +28,12 @@ function clearSnow() {
 
 // --- Theme helper ---
 function setSnowTheme(isSnow) {
-  // не затираємо всі класи!
-  document.body.classList.toggle("snow", isSnow);
-  document.body.classList.toggle("sun", !isSnow);
-
   if (isSnow) {
+    document.body.className = "snow";
     sunEl.style.display = "none";
     createSnow();
   } else {
+    document.body.className = "sun";
     sunEl.style.display = "block";
     clearSnow();
   }
