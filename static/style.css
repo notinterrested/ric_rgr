@@ -64,6 +64,12 @@ body.snow #bgSnow { opacity: 1; }
 
 /* ===== CENTER CARD ===== */
 .card {
+position: relative;
+  left: auto;
+  top: auto;
+  transform: none;
+  margin: 0;
+
   width: min(520px, 90vw);
   padding: 28px 24px 26px;
   border-radius: 20px;
@@ -138,6 +144,7 @@ pre {
   user-select: none;
   animation-name: fall;
   animation-timing-function: linear;
+  animation-iteration-count: infinite;
   z-index: 2; /* нижче card (10) */
 }
 
