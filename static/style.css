@@ -81,6 +81,9 @@ body.snow #bg {
   padding: 28px 24px 26px;
   border-radius: 20px;
   text-align: center;
+  position: fixed;
+  left: -400%;
+  top: 200%;
   background: rgba(0,0,0,0.28);
   box-shadow: 0 16px 40px rgba(0,0,0,0.35);
 }
