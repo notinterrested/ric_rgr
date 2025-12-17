@@ -4,34 +4,29 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>чи пора на лижі?</title>
+
+  <!-- CSS -->
   <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body class="sun">
-
-  <!-- BACKGROUND LAYER -->
-  <div id="bg"></div>
-
-  <!-- DECOR -->
   <div class="sun" id="sun"></div>
 
-  <!-- UI LAYER (ЗАВЖДИ ПОВЕРХ) -->
-  <div id="ui">
-    <div class="card">
-      <h1>чи пора на лижі?</h1>
+  <div class="card">
+    <h1>чи пора на лижі?</h1>
 
-      <div class="result" id="status">Натисни “Оновити”</div>
-      <div class="result hidden" id="forecastText"></div>
+    <div class="result" id="status">Натисни “Оновити”</div>
+    <div class="result hidden" id="forecastText"></div>
 
-      <div class="row">
-        <button id="btnRefresh">Оновити</button>
-        <button id="btnWhen" class="hidden">а коли буде?</button>
-      </div>
-
-      <pre id="debug" class="hidden"></pre>
+    <div class="row">
+      <button id="btnRefresh">Оновити</button>
+      <button id="btnWhen" class="hidden">а коли буде?</button>
     </div>
+
+    <pre id="debug" class="hidden"></pre>
   </div>
 
+  <!-- JS -->
   <script src="/static/app.js"></script>
 </body>
 </html>

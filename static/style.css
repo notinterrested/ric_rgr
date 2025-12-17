@@ -1,36 +1,37 @@
 /* ===== RESET ===== */
-* { box-sizing: border-box; }
-html, body { height: 100%; margin: 0; }
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
 
 /* ===== BASE ===== */
 body {
   font-family: Arial, sans-serif;
   color: #ffffff;
   overflow: hidden;
-  position: relative;
+  transition: background 0.6s ease;
 }
 
-/* ===== BACKGROUND LAYER (НИЖЧЕ ЗА ВСЕ) ===== */
-#bg {
-  position: fixed;
-  inset: 0;
-  z-index: 0;               /* ✅ завжди найнижче */
-  pointer-events: none;
-  transition: background 1200ms ease-in-out;
-}
-
-body.sun #bg {
+/* ===== THEMES ===== */
+body.sun {
   background: linear-gradient(180deg, #ffd39a, #d9822b);
 }
 
-body.snowsoon #bg,
-body.snow #bg {
-  background: linear-gradient(180deg, #b7dcff, #4b78c8);
+body.snow {
+  background: linear-gradient(180deg, #dff3ff, #7fbce8);
 }
 
-/* ===== DECOR LAYER ===== */
-.sun, .snowflake { pointer-events: none; }
+/* ===== DECOR (НЕ ЛОВИТЬ КЛІКИ) ===== */
+.sun,
+.snowflake {
+  pointer-events: none;
+}
 
+/* Сонце */
 .sun {
   position: fixed;
   top: 40px;
@@ -39,53 +40,37 @@ body.snow #bg {
   height: 140px;
   background: radial-gradient(circle, #fff8c6, #ffb703);
   border-radius: 50%;
-  box-shadow: 0 0 80px rgba(255,200,80,0.8);
+  box-shadow: 0 0 80px rgba(255, 200, 80, 0.8);
   animation: pulse 3s ease-in-out infinite;
-  z-index: 5;               /* ✅ нижче UI */
+  z-index: 1;
 }
 
 @keyframes pulse {
-  0%,100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
-.snowflake {
-  position: fixed;
-  top: -10px;
-  color: white;
-  user-select: none;
-  animation-name: fall;
-  animation-timing-function: linear;
-  z-index: 10;              /* ✅ нижче UI */
-}
-
-@keyframes fall {
-  to { transform: translateY(110vh); }
-}
-
-/* ===== UI LAYER (СТВОРЮЄ ОКРЕМИЙ STACKING CONTEXT) ===== */
-#ui {
-  position: fixed;
-  inset: 0;
-  z-index: 100;             /* ✅ ЗАВЖДИ ПОВЕРХ bg/декору */
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  pointer-events: none;     /* ✅ кліки тільки всередині card */
-}
-
-/* ===== CARD (КЛІКАБЕЛЬНА) ===== */
+/* ===== CENTER CARD ===== */
 .card {
-  pointer-events: auto;     /* ✅ дозволяємо кліки */
+  position: fixed;
+  left: -400%;
+  top: 200%;
+  transform: translate(-50%, -50%);
+
   width: min(520px, 90vw);
   padding: 28px 24px 26px;
   border-radius: 20px;
   text-align: center;
-  position: fixed;
-  left: -400%;
-  top: 200%;
-  background: rgba(0,0,0,0.28);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+
+  background: rgba(0, 0, 0, 0.28);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  z-index: 10;
+
+  pointer-events: auto;
 }
 
 /* ===== TEXT ===== */
@@ -125,10 +110,10 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* ===== DEBUG ===== */
+/* ===== DEBUG / API OUTPUT ===== */
 pre {
-  margin-top: 18px;
-  background: rgba(0,0,0,0.35);
+  margin: 18px 0 0;
+  background: rgba(0, 0, 0, 0.35);
   padding: 14px;
   border-radius: 12px;
   max-height: 220px;
@@ -140,4 +125,23 @@ pre {
 }
 
 /* ===== HELPERS ===== */
-.hidden { display: none !important; }
+.hidden {
+  display: none !important;
+}
+
+/* ===== SNOW ANIMATION ===== */
+.snowflake {
+  position: fixed;
+  top: -10px;
+  color: white;
+  user-select: none;
+  animation-name: fall;
+  animation-timing-function: linear;
+  z-index: 2;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh);
+  }
+}
