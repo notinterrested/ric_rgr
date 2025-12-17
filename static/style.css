@@ -16,6 +16,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  
 
   z-index: 10;              /* вище фону і снігу */
   pointer-events: none;     /* щоб фон не “ловив” кліки */
