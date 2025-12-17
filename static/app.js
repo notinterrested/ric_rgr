@@ -8,6 +8,11 @@ const forecastEl = document.getElementById("forecastText");
 const debugEl = document.getElementById("debug");
 const sunEl = document.getElementById("sun");
 
+function setTheme(theme) {
+  document.body.classList.remove("sun", "snow", "snowsoon");
+  document.body.classList.add(theme);
+}
+
 // --- Snow helpers ---
 function createSnow() {
   // не множимо сніжинки безконтрольно
@@ -48,7 +53,7 @@ function showNoSnowUI() {
 }
 
 function applySnowSoonTheme() {
-  document.body.className = "snowsoon";
+  setTheme("snowsoon");
   sunEl.style.display = "none";
   createSnow();
 }
@@ -90,13 +95,13 @@ async function refreshWeather() {
     const data = parsed.data;
 
     if (data.is_snowing) {
-      document.body.className = "snow";
+      setTheme("snow");
       sunEl.style.display = "none";
       createSnow();
       statusEl.textContent = "Пора.";
       showSnowUI(data);
     } else {
-      document.body.className = "sun";
+      setTheme("sun");
       sunEl.style.display = "block";
       clearSnow();
       statusEl.textContent = "Ще рано((";
@@ -131,14 +136,16 @@ async function getForecast() {
 
     if (d) {
     forecastEl.textContent = "Сніг очікується: " + d;
-    applySnowSoonTheme();   // ✅ синій фон + сніжинки
+    setTheme("snowsoon");     // ✅ плавно стає синім
+    sunEl.style.display = "none";
+    createSnow();             // ✅ запускаємо сніг
     } else {
     forecastEl.textContent = "невідомо";
-    // якщо невідомо — повертаємось до звичайного "sun" (без снігу)
-    document.body.className = "sun";
+    setTheme("sun");
     sunEl.style.display = "block";
     clearSnow();
     }
+
 
   } catch (e) {
     forecastEl.textContent = "Помилка запиту прогнозу";

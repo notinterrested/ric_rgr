@@ -1,42 +1,51 @@
 /* ===== RESET ===== */
-* {
-  box-sizing: border-box;
-}
-
-html, body {
-  height: 100%;
-  margin: 0;
-}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
 
 /* ===== BASE ===== */
 body {
   font-family: Arial, sans-serif;
   color: #ffffff;
   overflow: hidden;
-  transition: background 0.6s ease;
+  position: relative;
 }
 
-/* ===== THEMES ===== */
-body.sun {
+/* Ми робимо фон через шари: базовий (sun) + overlay (blue) */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Базовий фон (помаранчевий) */
+body::before {
   background: linear-gradient(180deg, #ffd39a, #d9822b);
+  opacity: 1;
 }
 
-body.snowsoon {
+/* Синій overlay, який плавно з’являється */
+body::after {
   background: linear-gradient(180deg, #b7dcff, #4b78c8);
+  opacity: 0;
+  transition: opacity 1200ms ease-in-out; /* ✅ плавний перехід */
 }
 
-
-body.snow {
-  background: linear-gradient(180deg, #dff3ff, #7fbce8);
+/* Коли snow / snowsoon — включаємо синій overlay */
+body.snow::after,
+body.snowsoon::after {
+  opacity: 1;
 }
 
-/* ===== DECOR (НЕ ЛОВИТЬ КЛІКИ) ===== */
+/* ===== DECOR ===== */
 .sun,
 .snowflake {
   pointer-events: none;
 }
 
-/* Сонце */
+/* Сонце — над фоном, але під card */
 .sun {
   position: fixed;
   top: 40px;
@@ -47,19 +56,15 @@ body.snow {
   border-radius: 50%;
   box-shadow: 0 0 80px rgba(255, 200, 80, 0.8);
   animation: pulse 3s ease-in-out infinite;
-  z-index: 1;
+  z-index: 2;
 }
 
 @keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 
-/* ===== CENTER CARD ===== */
+/* ===== CARD (завжди поверх всього) ===== */
 .card {
   position: fixed;
   left: -400%;
@@ -73,8 +78,7 @@ body.snow {
 
   background: rgba(0, 0, 0, 0.28);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-  z-index: 10;
-
+  z-index: 50;               /* ✅ завжди зверху */
   pointer-events: auto;
 }
 
@@ -115,7 +119,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* ===== DEBUG / API OUTPUT ===== */
+/* ===== DEBUG ===== */
 pre {
   margin: 18px 0 0;
   background: rgba(0, 0, 0, 0.35);
@@ -130,11 +134,10 @@ pre {
 }
 
 /* ===== HELPERS ===== */
-.hidden {
-  display: none !important;
-}
+.hidden { display: none !important; }
 
-/* ===== SNOW ANIMATION ===== */
+/* ===== SNOW ===== */
+/* Сніжинки завжди ПІД card */
 .snowflake {
   position: fixed;
   top: -10px;
@@ -142,11 +145,9 @@ pre {
   user-select: none;
   animation-name: fall;
   animation-timing-function: linear;
-  z-index: 2;
+  z-index: 5; /* ✅ нижче card (50) */
 }
 
 @keyframes fall {
-  to {
-    transform: translateY(110vh);
-  }
+  to { transform: translateY(110vh); }
 }
