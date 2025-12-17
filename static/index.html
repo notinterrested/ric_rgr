@@ -1,36 +1,28 @@
-<!doctype html>
-<html lang="uk">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>чи пора на лижі?</title>
-
-  <link rel="stylesheet" href="/static/style.css">
-</head>
-
 <body class="sun">
-  <!-- фонові шари для плавного переходу -->
+
+  <!-- background layers -->
   <div id="bgSun" class="bg sun"></div>
   <div id="bgSnow" class="bg snow"></div>
 
-  <!-- декор -->
+  <!-- decor -->
   <div class="sun" id="sun"></div>
 
-  <!-- контент (ЗАВЖДИ по центру) -->
-  <div class="card">
-    <h1>чи пора на лижі?</h1>
+  <!-- ⬇️ ОКРЕМИЙ КОНТЕЙНЕР -->
+  <div class="center">
+    <div class="card">
+      <h1>чи пора на лижі?</h1>
 
-    <div class="result" id="status">Натисни “Оновити”</div>
-    <div class="result hidden" id="forecastText"></div>
+      <div class="result" id="status">Натисни “Оновити”</div>
+      <div class="result hidden" id="forecastText"></div>
 
-    <div class="row">
-      <button id="btnRefresh">Оновити</button>
-      <button id="btnWhen" class="hidden">а коли буде?</button>
+      <div class="row">
+        <button id="btnRefresh">Оновити</button>
+        <button id="btnWhen" class="hidden">а коли буде?</button>
+      </div>
+
+      <pre id="debug" class="hidden"></pre>
     </div>
-
-    <pre id="debug" class="hidden"></pre>
   </div>
 
   <script src="/static/app.js"></script>
 </body>
-</html>

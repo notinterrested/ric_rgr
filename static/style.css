@@ -8,11 +8,14 @@ body {
   color: #ffffff;
   overflow: hidden;
 
-  /* центрована card */
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
+}
+
+.center {
+  position: relative;
+  z-index: 10;
 }
 
 /* ===== BACKGROUND LAYERS (плавний перехід) ===== */
@@ -64,11 +67,7 @@ body.snow #bgSnow { opacity: 1; }
 
 /* ===== CENTER CARD ===== */
 .card {
-position: relative;
-  left: auto;
-  top: auto;
-  transform: none;
-  margin: 0;
+  position: relative;
 
   width: min(520px, 90vw);
   padding: 28px 24px 26px;
@@ -77,9 +76,6 @@ position: relative;
 
   background: rgba(0, 0, 0, 0.28);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-  z-index: 10;
-
-  pointer-events: auto;
 }
 
 /* ===== TEXT ===== */
