@@ -20,7 +20,12 @@
     body.sun  { background: linear-gradient(180deg, #ffd39a, #d9822b); }
     body.snow { background: linear-gradient(180deg, #dff3ff, #7fbce8); }
 
-    /* Декор */
+    /* ===== DECOR (НЕ ЛОВИТЬ КЛІКИ) ===== */
+    .sun,
+    .snowflake {
+      pointer-events: none;
+    }
+
     .sun {
       position: fixed;
       top: 40px;
@@ -32,7 +37,6 @@
       box-shadow: 0 0 80px rgba(255,200,80,0.8);
       animation: pulse 3s ease-in-out infinite;
       z-index: 1;
-      pointer-events: none;
     }
 
     @keyframes pulse {
@@ -40,11 +44,11 @@
       50% { transform: scale(1.05); }
     }
 
-    /* ✅ ГАРАНТОВАНЕ ЦЕНТРУВАННЯ */
+    /* ===== CARD (ГАРАНТОВАНО КЛІКАБЕЛЬНА) ===== */
     .card {
       position: fixed;
       left: -400%;
-      top: 180%;
+      top: 200%;
       transform: translate(-50%, -50%);
 
       width: min(520px, 90vw);
@@ -55,6 +59,8 @@
       background: rgba(0,0,0,0.28);
       box-shadow: 0 16px 40px rgba(0,0,0,0.35);
       z-index: 10;
+
+      pointer-events: auto;
     }
 
     h1 { margin: 0 0 18px; font-size: 28px; font-weight: 700; }
@@ -84,13 +90,12 @@
       word-break: break-word;
     }
 
-    /* Сніг */
+    /* ===== SNOW ANIMATION ===== */
     .snowflake {
       position: fixed;
       top: -10px;
       color: white;
       user-select: none;
-      pointer-events: none;
       animation-name: fall;
       animation-timing-function: linear;
       z-index: 2;
