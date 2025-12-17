@@ -47,6 +47,12 @@ function showNoSnowUI() {
   forecastEl.textContent = "";
 }
 
+function applySnowSoonTheme() {
+  document.body.className = "snowsoon";
+  sunEl.style.display = "none";
+  createSnow();
+}
+
 function showSnowUI(data) {
   btnWhen.classList.add("hidden");
   forecastEl.classList.add("hidden");
@@ -93,7 +99,7 @@ async function refreshWeather() {
       document.body.className = "sun";
       sunEl.style.display = "block";
       clearSnow();
-      statusEl.textContent = "Ще рано";
+      statusEl.textContent = "Ще рано((";
       showNoSnowUI();
     }
   } catch (e) {
@@ -122,7 +128,18 @@ async function getForecast() {
     }
 
     const d = parsed.data.first_snow_date;
-    forecastEl.textContent = d ? ("Сніг очікується: " + d) : "невідомо";
+
+    if (d) {
+    forecastEl.textContent = "Сніг очікується: " + d;
+    applySnowSoonTheme();   // ✅ синій фон + сніжинки
+    } else {
+    forecastEl.textContent = "невідомо";
+    // якщо невідомо — повертаємось до звичайного "sun" (без снігу)
+    document.body.className = "sun";
+    sunEl.style.display = "block";
+    clearSnow();
+    }
+
   } catch (e) {
     forecastEl.textContent = "Помилка запиту прогнозу";
     showDebug(String(e));

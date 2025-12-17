@@ -21,6 +21,11 @@ body.sun {
   background: linear-gradient(180deg, #ffd39a, #d9822b);
 }
 
+body.snowsoon {
+  background: linear-gradient(180deg, #b7dcff, #4b78c8);
+}
+
+
 body.snow {
   background: linear-gradient(180deg, #dff3ff, #7fbce8);
 }
