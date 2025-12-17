@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bukovel — чи падає сніг?</title>
+  <title>чи пора на лижі?</title>
 
   <style>
     html, body {
@@ -16,6 +16,9 @@
       color: #ffffff;
       overflow: hidden;
       transition: background 0.6s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     body.sun {
@@ -26,49 +29,53 @@
       background: linear-gradient(180deg, #dff3ff, #7fbce8);
     }
 
-    .wrap {
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 24px;
-      position: relative;
+    /* ===== CARD ===== */
+
+    .card {
+      background: rgba(0,0,0,0.28);
+      border-radius: 20px;
+      padding: 28px 24px 26px;
+      width: min(520px, 90vw);
+      text-align: center;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.35);
       z-index: 2;
     }
 
-    .card {
-      background: rgba(0,0,0,0.25);
-      border-radius: 16px;
-      padding: 24px;
-      max-width: 520px;
-      width: 100%;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    h1 {
+      margin: 0 0 18px;
+      font-size: 28px;
+      font-weight: 700;
     }
 
-    h1 {
-      margin-top: 0;
+    .result {
+      font-size: 22px;
+      margin-bottom: 20px;
     }
 
     button {
-      padding: 12px 18px;
-      border-radius: 10px;
+      padding: 14px 26px;
+      border-radius: 14px;
       border: none;
       cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
+      font-size: 18px;
+      font-weight: 700;
+      background: #ffffff;
+      color: #000000;
     }
 
     pre {
-      margin-top: 16px;
-      background: rgba(0,0,0,0.3);
-      padding: 12px;
-      border-radius: 10px;
+      margin-top: 18px;
+      background: rgba(0,0,0,0.35);
+      padding: 14px;
+      border-radius: 12px;
       max-height: 220px;
       overflow: auto;
       font-size: 12px;
+      text-align: left;
     }
 
-    /* Snow */
+    /* ===== SNOW ===== */
+
     .snowflake {
       position: fixed;
       top: -10px;
@@ -85,7 +92,8 @@
       }
     }
 
-    /* Sun */
+    /* ===== SUN ===== */
+
     .sun {
       position: fixed;
       top: 40px;
@@ -110,16 +118,16 @@
 
   <div class="sun" id="sun"></div>
 
-  <div class="wrap">
-    <div class="card">
-      <h1>Bukovel: чи падає сніг?</h1>
+  <div class="card">
+    <h1>чи пора на лижі?</h1>
 
-      <button id="btn">Оновити</button>
-
-      <p id="status">Натисни кнопку</p>
-
-      <pre id="debug"></pre>
+    <div class="result" id="status">
+      Натисни кнопку
     </div>
+
+    <button id="btn">Оновити</button>
+
+    <pre id="debug"></pre>
   </div>
 
   <script>
@@ -146,7 +154,7 @@
     }
 
     btn.addEventListener("click", async () => {
-      statusEl.textContent = "Оновлюю...";
+      statusEl.textContent = "Оновлюю…";
       debugEl.textContent = "";
       btn.disabled = true;
 
@@ -158,7 +166,7 @@
           "HTTP " + response.status + "\n\n" + text;
 
         if (!response.ok) {
-          statusEl.textContent = "Помилка запиту";
+          statusEl.textContent = "Помилка";
           return;
         }
 
@@ -166,7 +174,7 @@
         try {
           data = JSON.parse(text);
         } catch {
-          statusEl.textContent = "Відповідь не JSON";
+          statusEl.textContent = "Помилка даних";
           return;
         }
 
@@ -175,12 +183,12 @@
           sunEl.style.display = "none";
           clearSnow();
           createSnow();
-          statusEl.textContent = "падає сніг";
+          statusEl.textContent = "Пора.";
         } else {
           document.body.className = "sun";
           sunEl.style.display = "block";
           clearSnow();
-          statusEl.textContent = "снігу немає";
+          statusEl.textContent = "Ще рано";
         }
 
       } catch (e) {
