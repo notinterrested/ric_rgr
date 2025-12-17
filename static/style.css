@@ -10,33 +10,27 @@ body {
   position: relative;
 }
 
-/* ===== BACKGROUND LAYER (ВАЖЛИВО: НЕ ЛОВИТЬ КЛІКИ) ===== */
+/* ===== BACKGROUND LAYER (НИЖЧЕ ЗА ВСЕ) ===== */
 #bg {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: 0;               /* ✅ завжди найнижче */
+  pointer-events: none;
   transition: background 1200ms ease-in-out;
-  pointer-events: none; /* ✅ ОЦЕ ФІКСИТЬ “НЕ КЛІКАЄТЬСЯ” */
 }
 
-/* фон: сонце */
 body.sun #bg {
   background: linear-gradient(180deg, #ffd39a, #d9822b);
 }
 
-/* фон: скоро сніг / сніг */
 body.snowsoon #bg,
 body.snow #bg {
   background: linear-gradient(180deg, #b7dcff, #4b78c8);
 }
 
-/* ===== DECOR ===== */
-.sun,
-.snowflake {
-  pointer-events: none;
-}
+/* ===== DECOR LAYER ===== */
+.sun, .snowflake { pointer-events: none; }
 
-/* сонце */
 .sun {
   position: fixed;
   top: 40px;
@@ -47,7 +41,7 @@ body.snow #bg {
   border-radius: 50%;
   box-shadow: 0 0 80px rgba(255,200,80,0.8);
   animation: pulse 3s ease-in-out infinite;
-  z-index: 2;
+  z-index: 5;               /* ✅ нижче UI */
 }
 
 @keyframes pulse {
@@ -55,20 +49,40 @@ body.snow #bg {
   50% { transform: scale(1.05); }
 }
 
+.snowflake {
+  position: fixed;
+  top: -10px;
+  color: white;
+  user-select: none;
+  animation-name: fall;
+  animation-timing-function: linear;
+  z-index: 10;              /* ✅ нижче UI */
+}
+
+@keyframes fall {
+  to { transform: translateY(110vh); }
+}
+
+/* ===== UI LAYER (СТВОРЮЄ ОКРЕМИЙ STACKING CONTEXT) ===== */
+#ui {
+  position: fixed;
+  inset: 0;
+  z-index: 100;             /* ✅ ЗАВЖДИ ПОВЕРХ bg/декору */
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  pointer-events: none;     /* ✅ кліки тільки всередині card */
+}
+
 /* ===== CARD (КЛІКАБЕЛЬНА) ===== */
 .card {
-  position: fixed;
-  left: -400%;
-  top: 200%;
-  transform: translate(-50%, -50%);
+  pointer-events: auto;     /* ✅ дозволяємо кліки */
   width: min(520px, 90vw);
   padding: 28px 24px 26px;
   border-radius: 20px;
   text-align: center;
   background: rgba(0,0,0,0.28);
   box-shadow: 0 16px 40px rgba(0,0,0,0.35);
-  z-index: 50;
-  pointer-events: auto; /* ✅ щоб точно */
 }
 
 /* ===== TEXT ===== */
@@ -123,21 +137,4 @@ pre {
 }
 
 /* ===== HELPERS ===== */
-.hidden {
-  display: none !important;
-}
-
-/* ===== SNOW ===== */
-.snowflake {
-  position: fixed;
-  top: -10px;
-  color: white;
-  user-select: none;
-  animation-name: fall;
-  animation-timing-function: linear;
-  z-index: 5;
-}
-
-@keyframes fall {
-  to { transform: translateY(110vh); }
-}
+.hidden { display: none !important; }
