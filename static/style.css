@@ -1,35 +1,47 @@
 /* ===== RESET ===== */
-* {
-  box-sizing: border-box;
-}
-
-html, body {
-  height: 100%;
-  margin: 0;
-}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
 
 /* ===== BASE ===== */
 body {
   font-family: Arial, sans-serif;
   color: #ffffff;
   overflow: hidden;
-  transition: background 0.6s ease;
+
+  /* центрована card */
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* ===== THEMES ===== */
-body.sun {
+/* ===== BACKGROUND LAYERS (плавний перехід) ===== */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  transition: opacity 0.8s ease;
+}
+
+.bg.sun {
   background: linear-gradient(180deg, #ffd39a, #d9822b);
+  opacity: 1;
 }
 
-body.snow {
+.bg.snow {
   background: linear-gradient(180deg, #dff3ff, #7fbce8);
+  opacity: 0;
 }
+
+/* перемикання теми */
+body.sun #bgSun { opacity: 1; }
+body.sun #bgSnow { opacity: 0; }
+
+body.snow #bgSun { opacity: 0; }
+body.snow #bgSnow { opacity: 1; }
 
 /* ===== DECOR (НЕ ЛОВИТЬ КЛІКИ) ===== */
-.sun,
-.snowflake {
-  pointer-events: none;
-}
+.sun, .snowflake { pointer-events: none; }
 
 /* Сонце */
 .sun {
@@ -46,21 +58,12 @@ body.snow {
 }
 
 @keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 
 /* ===== CENTER CARD ===== */
 .card {
-  position: fixed;
-  left: -400%;
-  top: 200%;
-  transform: translate(-50%, -50%);
-
   width: min(520px, 90vw);
   padding: 28px 24px 26px;
   border-radius: 20px;
@@ -125,9 +128,7 @@ pre {
 }
 
 /* ===== HELPERS ===== */
-.hidden {
-  display: none !important;
-}
+.hidden { display: none !important; }
 
 /* ===== SNOW ANIMATION ===== */
 .snowflake {
@@ -137,11 +138,9 @@ pre {
   user-select: none;
   animation-name: fall;
   animation-timing-function: linear;
-  z-index: 2;
+  z-index: 2; /* нижче card (10) */
 }
 
 @keyframes fall {
-  to {
-    transform: translateY(110vh);
-  }
+  to { transform: translateY(110vh); }
 }

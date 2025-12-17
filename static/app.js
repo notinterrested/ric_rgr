@@ -1,6 +1,5 @@
 // static/app.js
 
-// Елементи зі сторінки
 const btnRefresh = document.getElementById("btnRefresh");
 const btnWhen = document.getElementById("btnWhen");
 const statusEl = document.getElementById("status");
@@ -10,9 +9,7 @@ const sunEl = document.getElementById("sun");
 
 // --- Snow helpers ---
 function createSnow() {
-  // не множимо сніжинки безконтрольно
   clearSnow();
-
   for (let i = 0; i < 40; i++) {
     const flake = document.createElement("div");
     flake.className = "snowflake";
@@ -29,6 +26,19 @@ function clearSnow() {
   document.querySelectorAll(".snowflake").forEach(e => e.remove());
 }
 
+// --- Theme helper ---
+function setSnowTheme(isSnow) {
+  if (isSnow) {
+    document.body.className = "snow";
+    sunEl.style.display = "none";
+    createSnow();
+  } else {
+    document.body.className = "sun";
+    sunEl.style.display = "block";
+    clearSnow();
+  }
+}
+
 // --- UI helpers ---
 function showDebug(text) {
   debugEl.classList.remove("hidden");
@@ -41,8 +51,8 @@ function hideDebug() {
 }
 
 function showNoSnowUI() {
-  hideDebug();                       // коли нема снігу — debug ховаємо
-  btnWhen.classList.remove("hidden"); // показуємо "а коли буде?"
+  hideDebug();
+  btnWhen.classList.remove("hidden");
   forecastEl.classList.add("hidden");
   forecastEl.textContent = "";
 }
@@ -84,15 +94,11 @@ async function refreshWeather() {
     const data = parsed.data;
 
     if (data.is_snowing) {
-      document.body.className = "snow";
-      sunEl.style.display = "none";
-      createSnow();
+      setSnowTheme(true);
       statusEl.textContent = "Пора.";
       showSnowUI(data);
     } else {
-      document.body.className = "sun";
-      sunEl.style.display = "block";
-      clearSnow();
+      setSnowTheme(false);
       statusEl.textContent = "Ще рано";
       showNoSnowUI();
     }
@@ -122,7 +128,15 @@ async function getForecast() {
     }
 
     const d = parsed.data.first_snow_date;
-    forecastEl.textContent = d ? ("Сніг очікується: " + d) : "невідомо";
+
+    if (d) {
+      // якщо в найближчі 14 днів очікується сніг — теж робимо "snow" тему
+      setSnowTheme(true);
+      forecastEl.textContent = "Сніг очікується: " + d;
+    } else {
+      // якщо прогноз не каже дату — тему не змінюємо примусово
+      forecastEl.textContent = "невідомо";
+    }
   } catch (e) {
     forecastEl.textContent = "Помилка запиту прогнозу";
     showDebug(String(e));
@@ -135,5 +149,5 @@ async function getForecast() {
 btnRefresh.addEventListener("click", refreshWeather);
 btnWhen.addEventListener("click", getForecast);
 
-// стартовий стан (не обов'язково)
+// стартовий стан
 statusEl.textContent = "Натисни “Оновити”";

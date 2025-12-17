@@ -5,13 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>чи пора на лижі?</title>
 
-  <!-- CSS -->
   <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body class="sun">
+  <!-- фонові шари для плавного переходу -->
+  <div id="bgSun" class="bg sun"></div>
+  <div id="bgSnow" class="bg snow"></div>
+
+  <!-- декор -->
   <div class="sun" id="sun"></div>
 
+  <!-- контент (ЗАВЖДИ по центру) -->
   <div class="card">
     <h1>чи пора на лижі?</h1>
 
@@ -26,7 +31,6 @@
     <pre id="debug" class="hidden"></pre>
   </div>
 
-  <!-- JS -->
   <script src="/static/app.js"></script>
 </body>
 </html>
