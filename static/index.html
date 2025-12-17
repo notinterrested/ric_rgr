@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="uk">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bukovel Snow Checker</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bukovel — чи падає сніг?</title>
 
   <style>
     html, body {
@@ -18,17 +18,13 @@
       transition: background 0.6s ease;
     }
 
-    /* ====== THEMES ====== */
-
-    body.snow {
-      background: linear-gradient(180deg, #dff3ff, #7fbce8);
-    }
-
     body.sun {
       background: linear-gradient(180deg, #ffd39a, #d9822b);
     }
 
-    /* ====== LAYOUT ====== */
+    body.snow {
+      background: linear-gradient(180deg, #dff3ff, #7fbce8);
+    }
 
     .wrap {
       height: 100%;
@@ -41,7 +37,7 @@
     }
 
     .card {
-      background: rgba(0, 0, 0, 0.25);
+      background: rgba(0,0,0,0.25);
       border-radius: 16px;
       padding: 24px;
       max-width: 520px;
@@ -72,8 +68,7 @@
       font-size: 12px;
     }
 
-    /* ====== SNOW ====== */
-
+    /* Snow */
     .snowflake {
       position: fixed;
       top: -10px;
@@ -90,8 +85,7 @@
       }
     }
 
-    /* ====== SUN / DESERT ====== */
-
+    /* Sun */
     .sun {
       position: fixed;
       top: 40px;
@@ -100,7 +94,7 @@
       height: 140px;
       background: radial-gradient(circle, #fff8c6, #ffb703);
       border-radius: 50%;
-      box-shadow: 0 0 80px rgba(255, 200, 80, 0.8);
+      box-shadow: 0 0 80px rgba(255,200,80,0.8);
       animation: pulse 3s ease-in-out infinite;
       z-index: 1;
     }
@@ -118,10 +112,11 @@
 
   <div class="wrap">
     <div class="card">
-      <h1>Bukovel</h1>
-      <p id="status">Натисни кнопку, щоб перевірити погоду</p>
+      <h1>Bukovel: чи падає сніг?</h1>
 
       <button id="btn">Оновити</button>
+
+      <p id="status">Натисни кнопку</p>
 
       <pre id="debug"></pre>
     </div>
@@ -153,18 +148,27 @@
     btn.addEventListener("click", async () => {
       statusEl.textContent = "Оновлюю...";
       debugEl.textContent = "";
+      btn.disabled = true;
 
       try {
         const response = await fetch("/refresh", { method: "POST" });
-        const data = await response.json();
+        const text = await response.text();
+
+        debugEl.textContent =
+          "HTTP " + response.status + "\n\n" + text;
 
         if (!response.ok) {
-          statusEl.textContent = "Помилка";
-          debugEl.textContent = JSON.stringify(data, null, 2);
+          statusEl.textContent = "Помилка запиту";
           return;
         }
 
-        debugEl.textContent = JSON.stringify(data, null, 2);
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch {
+          statusEl.textContent = "Відповідь не JSON";
+          return;
+        }
 
         if (data.is_snowing) {
           document.body.className = "snow";
@@ -179,9 +183,11 @@
           statusEl.textContent = "снігу немає";
         }
 
-      } catch (err) {
+      } catch (e) {
         statusEl.textContent = "Помилка запиту";
-        debugEl.textContent = err.toString();
+        debugEl.textContent = String(e);
+      } finally {
+        btn.disabled = false;
       }
     });
   </script>
