@@ -33,6 +33,7 @@
 
     .card {
       background: rgba(0,0,0,0.28);
+      place-items: center;
       border-radius: 20px;
       padding: 28px 24px 26px;
       width: min(520px, 90vw);
@@ -188,7 +189,7 @@
           document.body.className = "sun";
           sunEl.style.display = "block";
           clearSnow();
-          statusEl.textContent = "Ще рано";
+          statusEl.textContent = "Ще рано((";
         }
 
       } catch (e) {
